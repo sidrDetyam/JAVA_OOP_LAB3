@@ -1,8 +1,9 @@
-package ru.nsu.ccfit.gemuev;
+package ru.nsu.ccfit.gemuev.controller;
 
-import ru.nsu.ccfit.gemuev.commands.CheckedIllegalArgsException;
-import ru.nsu.ccfit.gemuev.commands.Command;
-import ru.nsu.ccfit.gemuev.commands.CommandFactory;
+import ru.nsu.ccfit.gemuev.Model;
+import ru.nsu.ccfit.gemuev.controller.commands.CheckedIllegalArgsException;
+import ru.nsu.ccfit.gemuev.controller.commands.Command;
+import ru.nsu.ccfit.gemuev.controller.commands.CommandFactory;
 
 
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class ConsoleController implements Controller{
+public class Controller{
 
 
     private ArrayList<String> parse(String command){
@@ -30,7 +31,6 @@ public class ConsoleController implements Controller{
     }
 
 
-    @Override
     public void execute(Model model, String commandStr) {
 
         var tokens = parse(commandStr);
@@ -53,6 +53,5 @@ public class ConsoleController implements Controller{
         }
 
     }
-
 
 }

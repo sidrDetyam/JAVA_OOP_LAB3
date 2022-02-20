@@ -1,14 +1,15 @@
-package ru.nsu.ccfit.gemuev.commands;
+package ru.nsu.ccfit.gemuev.controller.commands;
 
 import org.jetbrains.annotations.NotNull;
 import ru.nsu.ccfit.gemuev.Model;
 import java.util.List;
 
-public class InitGameCommand extends AbstractIntegersCommand{
+public class FlagCellCommand extends AbstractIntegersCommand{
 
     @Override
     public void execute(@NotNull Model model, @NotNull List<String> arguments) throws CheckedIllegalArgsException {
-        parseArguments(arguments, 3);
-        model.init(args[0], args[1], args[2]);
+
+        parseArguments(arguments, 2);
+        model.changeFlag(args[0], args[1]);
     }
 }

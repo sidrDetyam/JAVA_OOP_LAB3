@@ -1,4 +1,4 @@
-package ru.nsu.ccfit.gemuev.commands;
+package ru.nsu.ccfit.gemuev.controller.commands;
 
 import org.jetbrains.annotations.NotNull;
 

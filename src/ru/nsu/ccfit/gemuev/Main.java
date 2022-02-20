@@ -1,12 +1,18 @@
 package ru.nsu.ccfit.gemuev;
 
+import ru.nsu.ccfit.gemuev.controller.Controller;
+import ru.nsu.ccfit.gemuev.gui.GuiView;
+//import ru.nsu.ccfit.gemuev.console.ConsoleView;
+
+
 public class Main {
 
     public static void main(String[] args) {
 
-        Model m = new Model(9, 9, 10);
-        ConsoleController c = new ConsoleController();
-        View v = new ConsoleView(m, c);
+        Model model = new Model();
+        Controller controller = new Controller();
+        controller.execute(model, "init 18 18 40");
 
+        View v = new GuiView(model, controller);
     }
 }

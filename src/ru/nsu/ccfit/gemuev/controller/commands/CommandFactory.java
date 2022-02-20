@@ -1,4 +1,4 @@
-package ru.nsu.ccfit.gemuev.commands;
+package ru.nsu.ccfit.gemuev.controller.commands;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,7 +37,7 @@ public class CommandFactory{
                 INSTANCE = new CommandFactory();
 
             } catch (ReflectiveOperationException | IOException e) {
-                throw new NoSuchElementException("Terminate!!!!!!!!!!", e);
+                throw new CommandFactoryException("Terminate!!!!!!!!!!", e);
             }
 
         }
@@ -57,7 +57,7 @@ public class CommandFactory{
             return Optional.of( (Command) constructor.newInstance());
         }
         catch(ReflectiveOperationException e){
-            throw new NoSuchElementException("Terminate!!!!!!!!!!", e);
+            throw new CommandFactoryException("Terminate!!!!!!!!!!", e);
         }
     }
 }

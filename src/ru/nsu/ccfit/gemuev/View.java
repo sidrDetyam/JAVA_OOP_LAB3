@@ -1,9 +1,8 @@
 package ru.nsu.ccfit.gemuev;
 
-import java.util.Observer;
 
-public interface View extends Observer {
+public interface View{
 
-    void run();
     void render();
+    void close();
 }

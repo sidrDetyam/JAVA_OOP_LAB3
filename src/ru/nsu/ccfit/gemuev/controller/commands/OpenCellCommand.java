@@ -1,9 +1,8 @@
-package ru.nsu.ccfit.gemuev.commands;
+package ru.nsu.ccfit.gemuev.controller.commands;
 
 import org.jetbrains.annotations.NotNull;
 import ru.nsu.ccfit.gemuev.Model;
 import java.util.List;
-
 
 public class OpenCellCommand extends AbstractIntegersCommand{
 

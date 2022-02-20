@@ -1,36 +1,32 @@
-package ru.nsu.ccfit.gemuev;
+package ru.nsu.ccfit.gemuev.console;
 
-import java.util.EventListener;
-import java.util.Observable;
-import java.util.Observer;
+import org.jetbrains.annotations.NotNull;
+import ru.nsu.ccfit.gemuev.Model;
+import ru.nsu.ccfit.gemuev.View;
+import ru.nsu.ccfit.gemuev.controller.Controller;
+
+
 import java.util.Scanner;
 
-public class ConsoleView implements View{
+
+public class ConsoleView implements View {
 
     private final Model model;
-    private final ConsoleController controller;
+    private boolean isClosed;
 
 
-    public ConsoleView(Model model, ConsoleController controller){
+    public ConsoleView(@NotNull Model model, @NotNull Controller controller){
         this.model = model;
-        this.controller = controller;
-        model.addObserver(this);
-        run();
-    }
+        isClosed = false;
+        model.setView(this);
 
-
-    @Override
-    public void run(){
         render();
-
         Scanner scanner = new Scanner(System.in);
-
-        while(true){
+        while(!isClosed){
             String command = scanner.nextLine();
             controller.execute(model, command);
         }
     }
-
 
     @Override
     public void render(){
@@ -61,12 +57,10 @@ public class ConsoleView implements View{
             }
             System.out.println();
         }
-
     }
 
-
     @Override
-    public void update(Observable o, Object arg) {
-        render();
+    public void close(){
+        isClosed = true;
     }
 }
