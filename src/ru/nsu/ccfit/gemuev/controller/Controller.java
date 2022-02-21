@@ -39,7 +39,7 @@ public class Controller{
         }
 
         String commandName = tokens.remove(0);
-        Optional<Command> opt = CommandFactory.getInstance().getCommand(commandName);
+        Optional<Command> opt = CommandFactory.getCommand(commandName);
 
         if(opt.isEmpty()){
             System.out.println("Command not found");
@@ -49,7 +49,7 @@ public class Controller{
         try {
             opt.get().execute(model, tokens);
         } catch (CheckedIllegalArgsException e) {
-            System.out.println("Wrong arguments");
+            System.out.println(e.getMessage());
         }
 
     }

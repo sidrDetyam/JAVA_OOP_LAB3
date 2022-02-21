@@ -1,8 +1,9 @@
 package ru.nsu.ccfit.gemuev;
 
+
+import ru.nsu.ccfit.gemuev.console.ConsoleView;
 import ru.nsu.ccfit.gemuev.controller.Controller;
 import ru.nsu.ccfit.gemuev.gui.GuiView;
-//import ru.nsu.ccfit.gemuev.console.ConsoleView;
 
 
 public class Main {

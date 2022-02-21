@@ -43,7 +43,7 @@ public class ConsoleView implements View {
 
                 if(cell.isOpen()){
                     if(cell.isMine()){
-                        symbol = '#';
+                        symbol = '@';
                     }
                     else{
                         symbol = (char) ((char) cell.minesAround() + '0');

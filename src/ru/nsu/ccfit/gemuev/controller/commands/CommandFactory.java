@@ -8,7 +8,7 @@ import java.util.*;
 
 public class CommandFactory{
 
-    private CommandFactory() throws IOException, ReflectiveOperationException {
+    private CommandFactory(){
 
         try(InputStream inputStream = CommandFactory.class
                 .getResourceAsStream("controller_commands.properties")) {
@@ -24,31 +24,19 @@ public class CommandFactory{
                 commandConstructors.put((String) i.getKey(), commandConstructor);
             }
         }
+        catch (IOException | ReflectiveOperationException e){
+            throw new CommandFactoryException("Terminate!!!!!!!", e);
+        }
     }
 
 
     private final HashMap<String, Constructor<?>> commandConstructors;
-    private static CommandFactory INSTANCE;
-
-    public static CommandFactory getInstance(){
-
-        if(INSTANCE==null){
-            try {
-                INSTANCE = new CommandFactory();
-
-            } catch (ReflectiveOperationException | IOException e) {
-                throw new CommandFactoryException("Terminate!!!!!!!!!!", e);
-            }
-
-        }
-
-        return INSTANCE;
-    }
+    private static final CommandFactory INSTANCE = new CommandFactory();
 
 
-    public Optional<Command> getCommand(String commandName){
+    public static Optional<Command> getCommand(String commandName){
 
-        var constructor = commandConstructors.get(commandName);
+        var constructor = INSTANCE.commandConstructors.get(commandName);
         if(constructor==null){
             return Optional.empty();
         }

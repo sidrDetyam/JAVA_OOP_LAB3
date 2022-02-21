@@ -24,7 +24,7 @@ public class MainWindow extends JFrame{
         JMenuItem middleItem = new JMenuItem("Middle");
         JMenuItem hardItem = new JMenuItem("Hard");
 
-        easyItem.addActionListener(e -> controller.execute(model, "init 10 10 12"));
+        easyItem.addActionListener(e -> controller.execute(model, "init 9 9 12"));
         middleItem.addActionListener(e -> controller.execute(model, "init 18  18 40"));
         hardItem.addActionListener(e -> controller.execute(model, "init 24 24 99"));
 
