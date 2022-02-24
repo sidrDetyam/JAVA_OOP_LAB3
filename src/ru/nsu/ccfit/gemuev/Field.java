@@ -157,10 +157,11 @@ public class Field {
 
         cells[x][y].isOpen = true;
         if(cells[x][y].minesAround == 0) {
-            dfs_open(x + 1, y);
-            dfs_open(x - 1, y);
-            dfs_open(x, y - 1);
-            dfs_open(x, y + 1);
+            for(int i=-1; i<2; ++i){
+                for(int j=-1; j<2; ++j){
+                    dfs_open(x+i, y+j);
+                }
+            }
         }
     }
 

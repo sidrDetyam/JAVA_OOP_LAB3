@@ -6,7 +6,7 @@ public class CommandFactoryException extends RuntimeException{
         super(message);
     }
 
-    CommandFactoryException(String message, Throwable cause){
+    public CommandFactoryException(String message, Throwable cause){
         super(message, cause);
     }
 }

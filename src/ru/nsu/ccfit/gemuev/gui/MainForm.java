@@ -5,15 +5,18 @@ import ru.nsu.ccfit.gemuev.controller.Controller;
 
 import javax.swing.*;
 
+public class MainForm extends JFrame{
 
-public class MainWindow extends JFrame{
+    public JPanel mainPanel;
+    public JPanel secondPanel;
+    public JLabel minesLabel;
 
-    MainWindow(Model model, Controller controller){
+
+    MainForm(Model model, Controller controller){
         super();
 
+        setContentPane(mainPanel);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(500, 500);
-        setVisible(true);
 
         JMenuBar menuBar = new JMenuBar();
         JMenu newGameMenu = new JMenu("New Game");
@@ -25,7 +28,7 @@ public class MainWindow extends JFrame{
         JMenuItem hardItem = new JMenuItem("Hard");
 
         easyItem.addActionListener(e -> controller.execute(model, "init 9 9 12"));
-        middleItem.addActionListener(e -> controller.execute(model, "init 18  18 40"));
+        middleItem.addActionListener(e -> controller.execute(model, "init 18 18 40"));
         hardItem.addActionListener(e -> controller.execute(model, "init 24 24 99"));
 
         newGameMenu.add(easyItem);
@@ -39,3 +42,4 @@ public class MainWindow extends JFrame{
     }
 
 }
+

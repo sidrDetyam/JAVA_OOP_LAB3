@@ -5,7 +5,6 @@ import ru.nsu.ccfit.gemuev.Model;
 import ru.nsu.ccfit.gemuev.View;
 import ru.nsu.ccfit.gemuev.controller.Controller;
 
-
 import java.util.Scanner;
 
 

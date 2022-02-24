@@ -4,49 +4,59 @@ import org.jetbrains.annotations.NotNull;
 import ru.nsu.ccfit.gemuev.Model;
 import ru.nsu.ccfit.gemuev.View;
 import ru.nsu.ccfit.gemuev.controller.Controller;
+import ru.nsu.ccfit.gemuev.controller.commands.CommandFactoryException;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Properties;
 
 
 public class GuiView implements View {
 
     private final Model model;
     private final Controller controller;
-    private final MainWindow mainWindow;
+    private final MainForm mainWindow;
     private JButton[][] cells;
 
-    private final ImageIcon baseMine;
-    private ImageIcon scaledMine;
-    private final ImageIcon[] baseDigits;
-    private ImageIcon[] scaledDigits;
-    private final ImageIcon baseClosed;
-    private ImageIcon scaledClosed;
-    private final ImageIcon baseFlag;
-    private ImageIcon scaledFlag;
+
+    private final int cellSize = 30;
+    private final HashMap<String, ImageIcon> icons;
 
 
     public GuiView(@NotNull Model model, @NotNull Controller controller){
         this.model = model;
         this.controller = controller;
         model.setView(this);
+        icons = new HashMap<>();
 
-        String recoursesPath = "src/ru/nsu/ccfit/gemuev/recourses/";
-        baseMine = new ImageIcon(recoursesPath + "mine.png");
-        baseDigits = new ImageIcon[9];
-        for(int i=0; i<9; ++i){
-            baseDigits[i] = new ImageIcon(recoursesPath + i + ".png");
+        try(InputStream inputStream = GuiView.class
+                .getResourceAsStream("recourses.properties")) {
+
+            Properties recourses = new Properties();
+            recourses.load(inputStream);
+
+            for (var i : recourses.entrySet()) {
+                ImageIcon icon = new ImageIcon((String)i.getValue());
+
+                ImageIcon scaledIcon = new ImageIcon(icon.getImage().
+                        getScaledInstance(cellSize, cellSize, Image.SCALE_SMOOTH));
+
+                icons.put((String) i.getKey(), scaledIcon);
+            }
         }
-        baseClosed = new ImageIcon(recoursesPath + "closed.png");
-        baseFlag = new ImageIcon(recoursesPath + "flag.png");
+        catch (IOException e){
+            throw new CommandFactoryException("Terminate!!!!!!!", e);
+        }
 
-
-        mainWindow = new MainWindow(model, controller);
+        mainWindow = new MainForm(model, controller);
         mainWindow.setTitle("Minesweeper");
-        mainWindow.setIconImage(baseMine.getImage());
-
+        mainWindow.setIconImage(icons.get("mine").getImage());
+        mainWindow.setVisible(true);
 
         render();
     }
@@ -54,17 +64,22 @@ public class GuiView implements View {
 
     private void init_render() {
 
-        mainWindow.getContentPane().removeAll();
         var layout = new GridLayout(model.sizeY(), model.sizeX(), 0, 0);
-        mainWindow.setLayout(layout);
-        mainWindow.setBackground(Color.GREEN);
+
+        mainWindow.secondPanel.removeAll();
+        mainWindow.secondPanel.setLayout(layout);
         cells = new JButton[model.sizeX()][model.sizeY()];
+
+        mainWindow.setSize(cellSize * model.sizeX() + 50, cellSize*model.sizeY());
+        mainWindow.setResizable(false);
 
 
         for (int i = 0; i < model.sizeX(); ++i) {
             for (int j = 0; j < model.sizeY(); ++j) {
 
                 cells[i][j] = new JButton();
+                cells[i][j].setPreferredSize(new Dimension(30, 30));
+
                 final Integer x = i;
                 final Integer y = j;
                 cells[i][j].addMouseListener(new MouseAdapter() {
@@ -80,29 +95,11 @@ public class GuiView implements View {
                     }
                 });
 
-                mainWindow.add(cells[i][j]);
+                mainWindow.secondPanel.add(cells[i][j]);
             }
         }
 
-        mainWindow.setSize(30 * model.sizeX() + 60, 30*model.sizeY() + 45);
-        mainWindow.setResizable(false);
         mainWindow.setVisible(true);
-
-
-        scaledMine = new ImageIcon(baseMine.getImage().
-                getScaledInstance(cells[0][0].getWidth(), cells[0][0].getHeight(), Image.SCALE_SMOOTH));
-
-        scaledClosed = new ImageIcon(baseClosed.getImage().
-                getScaledInstance(cells[0][0].getWidth(), cells[0][0].getHeight(), Image.SCALE_SMOOTH));
-
-        scaledFlag = new ImageIcon(baseFlag.getImage().
-                getScaledInstance(cells[0][0].getWidth(), cells[0][0].getHeight(), Image.SCALE_SMOOTH));
-
-        scaledDigits = new ImageIcon[9];
-        for(int i=0; i<9; ++i){
-            scaledDigits[i] = new ImageIcon(baseDigits[i].getImage().
-                    getScaledInstance(cells[0][0].getWidth(), cells[0][0].getHeight(), Image.SCALE_SMOOTH));
-        }
     }
 
 
@@ -113,6 +110,7 @@ public class GuiView implements View {
             init_render();
         }
 
+        ///TODO
         for (int i = 0; i < model.sizeX(); ++i) {
             for (int j = 0; j < model.sizeY(); ++j) {
 
@@ -122,17 +120,17 @@ public class GuiView implements View {
                 if(info.isOpen()){
                     cells[i][j].setBorder(BorderFactory.createEtchedBorder());
                     if(info.isMine()){
-                        cells[i][j].setIcon(scaledMine);
+                        cells[i][j].setIcon(icons.get("mine"));
                     }
                     else{
-                        cells[i][j].setIcon(scaledDigits[info.minesAround()]);
+                        cells[i][j].setIcon(icons.get(Integer.toString(info.minesAround())));
                     }
                 }
                 else{
                     if(info.isFlag()){
-                        cells[i][j].setIcon(scaledFlag);
+                        cells[i][j].setIcon(icons.get("flag"));
                     }else{
-                        cells[i][j].setIcon(scaledClosed);
+                        cells[i][j].setIcon(icons.get("closed"));
                     }
                 }
             }

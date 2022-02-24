@@ -12,10 +12,18 @@ public class Model{
     private boolean isViewClose;
     private View view;
 
+    private int clocks;
+    private boolean haveChanges;
+
 
     public boolean isFirstMove(){
         return isFirstMove;
     }
+
+    public boolean isHaveChanges(){
+        return haveChanges;
+    }
+
 
 
     public void setView(@NotNull View view) {
@@ -23,11 +31,13 @@ public class Model{
     }
 
 
-    private void updateView(){
-        if(view!=null){
+    public void updateView() {
+        if (view != null) {
             view.render();
+            haveChanges = false;
         }
     }
+
 
     public void closeView(){
         if(view!=null){
@@ -41,6 +51,8 @@ public class Model{
         field = new Field(fieldSizeX, fieldSizeY, countOfMines);
         isGameEnd = false;
         isFirstMove = true;
+        haveChanges = true;
+        clocks = 0;
         updateView();
     }
 
@@ -63,6 +75,8 @@ public class Model{
         if(!isGameEnd && field.isCellClosed(x, y)) {
             isGameEnd = field.openCell(x, y, isFirstMove);
             isFirstMove = false;
+
+            haveChanges = true;
             updateView();
         }
     }
@@ -72,6 +86,8 @@ public class Model{
 
         if(!isGameEnd && field.isCellClosed(x, y) && !isFirstMove){
             field.changeFlag(x, y);
+
+            haveChanges = true;
             updateView();
         }
     }
