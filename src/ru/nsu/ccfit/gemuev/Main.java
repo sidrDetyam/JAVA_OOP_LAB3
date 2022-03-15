@@ -16,20 +16,11 @@ public class Main {
 
         Model model = new Model();
         Controller controller = new Controller();
-        controller.execute(model, "init 18 18 315");
-        View v = new ConsoleView(model, controller);
+        controller.execute(model, "init 18 18 40");
+        View v = new GuiView(model, controller);
 
-
-
-
-//        final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-//        executorService.scheduleAtFixedRate(new Runnable() {
-//            @Override
-//            public void run() {
-//                ++model.clocks;
-//                model.updateView();
-//            }
-//        }, 0, 1, TimeUnit.SECONDS);
+        final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+        executorService.scheduleAtFixedRate(model::increaseClock, 0, 1, TimeUnit.SECONDS);
 
     }
 }

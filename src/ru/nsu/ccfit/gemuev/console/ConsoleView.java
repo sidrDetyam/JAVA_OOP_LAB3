@@ -17,9 +17,9 @@ public class ConsoleView implements View {
     public ConsoleView(@NotNull Model model, @NotNull Controller controller){
         this.model = model;
         isClosed = false;
-        model.setView(this);
+        model.add(this);
 
-        render();
+        update();
         Scanner scanner = new Scanner(System.in);
         while(!isClosed){
             String command = scanner.nextLine();
@@ -28,7 +28,7 @@ public class ConsoleView implements View {
     }
 
     @Override
-    public void render(){
+    public void update(){
 
         for(int j=0; j < model.sizeY(); ++j){
             for(int i=0; i < model.sizeX(); ++i){

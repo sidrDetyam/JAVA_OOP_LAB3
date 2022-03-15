@@ -28,10 +28,16 @@ public class GuiView implements View {
     private final HashMap<String, ImageIcon> icons;
 
 
+
+    public int getClock(){
+        return model.getClock();
+    }
+
+
     public GuiView(@NotNull Model model, @NotNull Controller controller){
         this.model = model;
         this.controller = controller;
-        model.setView(this);
+        model.add(this);
         icons = new HashMap<>();
 
         try(InputStream inputStream = GuiView.class
@@ -53,12 +59,13 @@ public class GuiView implements View {
             throw new CommandFactoryException("Terminate!!!!!!!", e);
         }
 
-        mainWindow = new MainForm(model, controller);
+        mainWindow = new MainForm(model, controller, this);
         mainWindow.setTitle("Minesweeper");
         mainWindow.setIconImage(icons.get("mine").getImage());
+
         mainWindow.setVisible(true);
 
-        render();
+        update();
     }
 
 
@@ -98,17 +105,16 @@ public class GuiView implements View {
                 mainWindow.secondPanel.add(cells[i][j]);
             }
         }
-
-        mainWindow.setVisible(true);
     }
 
 
     @Override
-    public void render() {
+    public void update() {
 
         if(model.isFirstMove()) {
             init_render();
         }
+
 
         ///TODO
         for (int i = 0; i < model.sizeX(); ++i) {
@@ -138,6 +144,7 @@ public class GuiView implements View {
 
         mainWindow.setVisible(true);
     }
+
 
     @Override
     public void close(){}

@@ -3,7 +3,7 @@ package ru.nsu.ccfit.gemuev;
 
 import org.jetbrains.annotations.NotNull;
 
-public class Model{
+public class Model extends Observable{
 
 
     private Field field;
@@ -12,8 +12,24 @@ public class Model{
     private boolean isViewClose;
     private View view;
 
-    private int clocks;
+    public final ModelClock clock;
     private boolean haveChanges;
+
+
+    public void increaseClock(){
+        if(!isFirstMove && !isGameEnd){
+            clock.increaseClock();
+        }
+    }
+
+
+    public int getClock(){
+        return clock.getClock();
+    }
+
+    public void nullClock(){
+        clock.setClock(0);
+    }
 
 
     public boolean isFirstMove(){
@@ -22,20 +38,6 @@ public class Model{
 
     public boolean isHaveChanges(){
         return haveChanges;
-    }
-
-
-
-    public void setView(@NotNull View view) {
-        this.view = view;
-    }
-
-
-    public void updateView() {
-        if (view != null) {
-            view.render();
-            haveChanges = false;
-        }
     }
 
 
@@ -52,12 +54,14 @@ public class Model{
         isGameEnd = false;
         isFirstMove = true;
         haveChanges = true;
-        clocks = 0;
-        updateView();
+        nullClock();
+        notifyObservers();
     }
 
 
-    public Model(){}
+    public Model(){
+        clock = new ModelClock();
+    }
 
 
     public int sizeX(){
@@ -77,7 +81,7 @@ public class Model{
             isFirstMove = false;
 
             haveChanges = true;
-            updateView();
+            notifyObservers();
         }
     }
 
@@ -88,7 +92,7 @@ public class Model{
             field.changeFlag(x, y);
 
             haveChanges = true;
-            updateView();
+            notifyObservers();
         }
     }
 
@@ -96,6 +100,5 @@ public class Model{
     public Field.CellInfo cellInfo(int x, int y){
         return field.cellInfo(x, y);
     }
-
 
 }

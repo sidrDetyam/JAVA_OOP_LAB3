@@ -9,10 +9,10 @@ public class MainForm extends JFrame{
 
     public JPanel mainPanel;
     public JPanel secondPanel;
-    public JLabel minesLabel;
+    public ClockLabel clockLabel;
 
 
-    MainForm(Model model, Controller controller){
+    MainForm(Model model, Controller controller, GuiView guiView){
         super();
 
         setContentPane(mainPanel);
@@ -39,6 +39,10 @@ public class MainForm extends JFrame{
         menuBar.add(highScoresMenu);
         menuBar.add(aboutMenu);
         setJMenuBar(menuBar);
+
+        clockLabel = new ClockLabel(guiView);
+        mainPanel.add(clockLabel);
+        model.clock.add(clockLabel);
     }
 
 }

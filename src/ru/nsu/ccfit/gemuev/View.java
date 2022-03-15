@@ -1,8 +1,7 @@
 package ru.nsu.ccfit.gemuev;
 
 
-public interface View{
+public interface View extends Observer{
 
-    void render();
     void close();
 }
