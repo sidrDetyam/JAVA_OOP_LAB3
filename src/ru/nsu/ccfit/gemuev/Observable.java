@@ -14,6 +14,8 @@ public class Observable {
         return observers.remove(observer);
     }
 
+    public void removeAll(){observers.clear();}
+
     public void notifyObservers(){
         for(var i : observers){
             i.update();

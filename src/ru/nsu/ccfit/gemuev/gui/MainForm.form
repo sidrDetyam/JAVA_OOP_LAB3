@@ -2,7 +2,7 @@
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="ru.nsu.ccfit.gemuev.gui.MainForm">
   <grid id="27dc6" binding="mainPanel" layout-manager="GridBagLayout">
     <constraints>
-      <xy x="95" y="70" width="593" height="296"/>
+      <xy x="95" y="70" width="593" height="415"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -23,7 +23,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
-          <text value="Label"/>
+          <text value=""/>
         </properties>
       </component>
     </children>

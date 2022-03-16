@@ -1,5 +1,7 @@
 package ru.nsu.ccfit.gemuev.controller.commands;
 
+import ru.nsu.ccfit.gemuev.LoadPropertiesException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
@@ -25,7 +27,7 @@ public class CommandFactory{
             }
         }
         catch (IOException | ReflectiveOperationException e){
-            throw new CommandFactoryException("Terminate!!!!!!!", e);
+            throw new LoadPropertiesException("Terminate!!!!!!!", e);
         }
     }
 
@@ -45,7 +47,7 @@ public class CommandFactory{
             return Optional.of( (Command) constructor.newInstance());
         }
         catch(ReflectiveOperationException e){
-            throw new CommandFactoryException("Terminate!!!!!!!!!!", e);
+            throw new LoadPropertiesException("Terminate!!!!!!!!!!", e);
         }
     }
 }

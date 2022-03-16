@@ -1,6 +1,8 @@
-package ru.nsu.ccfit.gemuev;
+package ru.nsu.ccfit.gemuev.model;
 
-public class ModelClock extends Observable{
+import ru.nsu.ccfit.gemuev.Observable;
+
+public class ModelClock extends Observable {
 
     private int clock;
 
@@ -13,12 +15,10 @@ public class ModelClock extends Observable{
         notifyObservers();
     }
 
-
     public synchronized void increaseClock(){
         ++clock;
         notifyObservers();
     }
-
 
     public synchronized int getClock(){
         return clock;

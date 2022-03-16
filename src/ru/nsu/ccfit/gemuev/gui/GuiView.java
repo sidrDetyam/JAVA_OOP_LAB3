@@ -1,10 +1,11 @@
 package ru.nsu.ccfit.gemuev.gui;
 
 import org.jetbrains.annotations.NotNull;
-import ru.nsu.ccfit.gemuev.Model;
+import ru.nsu.ccfit.gemuev.model.MineField;
+import ru.nsu.ccfit.gemuev.model.Model;
 import ru.nsu.ccfit.gemuev.View;
 import ru.nsu.ccfit.gemuev.controller.Controller;
-import ru.nsu.ccfit.gemuev.controller.commands.CommandFactoryException;
+import ru.nsu.ccfit.gemuev.LoadPropertiesException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,11 +30,6 @@ public class GuiView implements View {
 
 
 
-    public int getClock(){
-        return model.getClock();
-    }
-
-
     public GuiView(@NotNull Model model, @NotNull Controller controller){
         this.model = model;
         this.controller = controller;
@@ -56,15 +52,10 @@ public class GuiView implements View {
             }
         }
         catch (IOException e){
-            throw new CommandFactoryException("Terminate!!!!!!!", e);
+            throw new LoadPropertiesException("Terminate!!!!!!!", e);
         }
 
-        mainWindow = new MainForm(model, controller, this);
-        mainWindow.setTitle("Minesweeper");
-        mainWindow.setIconImage(icons.get("mine").getImage());
-
-        mainWindow.setVisible(true);
-
+        mainWindow = new MainForm(model, controller, icons.get("mine").getImage());
         update();
     }
 
@@ -77,7 +68,7 @@ public class GuiView implements View {
         mainWindow.secondPanel.setLayout(layout);
         cells = new JButton[model.sizeX()][model.sizeY()];
 
-        mainWindow.setSize(cellSize * model.sizeX() + 50, cellSize*model.sizeY());
+        mainWindow.setSize(cellSize * model.sizeX(), cellSize*model.sizeY()+50);
         mainWindow.setResizable(false);
 
 
@@ -86,6 +77,7 @@ public class GuiView implements View {
 
                 cells[i][j] = new JButton();
                 cells[i][j].setPreferredSize(new Dimension(30, 30));
+                cells[i][j].setText("");
 
                 final Integer x = i;
                 final Integer y = j;
@@ -108,37 +100,37 @@ public class GuiView implements View {
     }
 
 
+    private ImageIcon iconForCell(MineField.@NotNull CellInfo info){
+
+        if(info.isOpen()){
+            return icons.get(info.isMine()? "mine" : Integer.toString(info.minesAround()));
+        }
+
+        return icons.get(info.isFlag()? "flag" : "closed");
+    }
+
+
     @Override
     public void update() {
+
+        if(model.isViewClosed()){
+            close();
+            return;
+        }
 
         if(model.isFirstMove()) {
             init_render();
         }
 
-
-        ///TODO
         for (int i = 0; i < model.sizeX(); ++i) {
             for (int j = 0; j < model.sizeY(); ++j) {
 
                 var info = model.cellInfo(i, j);
-                cells[i][j].setText("");
-
                 if(info.isOpen()){
                     cells[i][j].setBorder(BorderFactory.createEtchedBorder());
-                    if(info.isMine()){
-                        cells[i][j].setIcon(icons.get("mine"));
-                    }
-                    else{
-                        cells[i][j].setIcon(icons.get(Integer.toString(info.minesAround())));
-                    }
                 }
-                else{
-                    if(info.isFlag()){
-                        cells[i][j].setIcon(icons.get("flag"));
-                    }else{
-                        cells[i][j].setIcon(icons.get("closed"));
-                    }
-                }
+
+                cells[i][j].setIcon(iconForCell(info));
             }
         }
 

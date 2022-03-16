@@ -1,7 +1,6 @@
 package ru.nsu.ccfit.gemuev.controller;
 
-import ru.nsu.ccfit.gemuev.Model;
-import ru.nsu.ccfit.gemuev.controller.commands.CheckedIllegalArgsException;
+import ru.nsu.ccfit.gemuev.model.Model;
 import ru.nsu.ccfit.gemuev.controller.commands.Command;
 import ru.nsu.ccfit.gemuev.controller.commands.CommandFactory;
 
@@ -42,14 +41,13 @@ public class Controller{
         Optional<Command> opt = CommandFactory.getCommand(commandName);
 
         if(opt.isEmpty()){
-            System.out.println("Command not found");
-            return;
+            throw new IllegalArgumentException("Command not found: "+commandName);
         }
 
         try {
             opt.get().execute(model, tokens);
         } catch (CheckedIllegalArgsException e) {
-            System.out.println(e.getMessage());
+            throw new IllegalArgumentException(e.getMessage(), e);
         }
 
     }

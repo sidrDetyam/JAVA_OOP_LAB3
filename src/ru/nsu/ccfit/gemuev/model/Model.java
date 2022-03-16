@@ -1,19 +1,21 @@
-package ru.nsu.ccfit.gemuev;
+package ru.nsu.ccfit.gemuev.model;
 
 
-import org.jetbrains.annotations.NotNull;
+import ru.nsu.ccfit.gemuev.Observable;
+import ru.nsu.ccfit.gemuev.Observer;
 
-public class Model extends Observable{
+public class Model extends Observable {
 
-
-    private Field field;
+    private MineField field;
     private boolean isGameEnd;
     private boolean isFirstMove;
-    private boolean isViewClose;
-    private View view;
+    private boolean isViewClosed;
+    private final ModelClock clock;
 
-    public final ModelClock clock;
-    private boolean haveChanges;
+
+    public void addClockLabel(Observer label){
+        clock.add(label);
+    }
 
 
     public void increaseClock(){
@@ -21,7 +23,6 @@ public class Model extends Observable{
             clock.increaseClock();
         }
     }
-
 
     public int getClock(){
         return clock.getClock();
@@ -31,29 +32,29 @@ public class Model extends Observable{
         clock.setClock(0);
     }
 
-
     public boolean isFirstMove(){
         return isFirstMove;
     }
 
-    public boolean isHaveChanges(){
-        return haveChanges;
-    }
-
+    public boolean isViewClosed() {return isViewClosed;}
 
     public void closeView(){
-        if(view!=null){
-            view.close();
-            view = null;
-        }
+        isViewClosed = true;
+        notifyObservers();
+        removeAll();
+    }
+
+    @Override
+    public void add(Observer observer){
+        super.add(observer);
+        isViewClosed = false;
     }
 
 
     public void init(int fieldSizeX, int fieldSizeY, int countOfMines){
-        field = new Field(fieldSizeX, fieldSizeY, countOfMines);
+        field = new MineField(fieldSizeX, fieldSizeY, countOfMines);
         isGameEnd = false;
         isFirstMove = true;
-        haveChanges = true;
         nullClock();
         notifyObservers();
     }
@@ -76,11 +77,9 @@ public class Model extends Observable{
 
     public void openCell(int x, int y){
 
-        if(!isGameEnd && field.isCellClosed(x, y)) {
+        if(!isGameEnd && !field.cellInfo(x, y).isOpen()) {
             isGameEnd = field.openCell(x, y, isFirstMove);
             isFirstMove = false;
-
-            haveChanges = true;
             notifyObservers();
         }
     }
@@ -88,16 +87,14 @@ public class Model extends Observable{
 
     public void changeFlag(int x, int y){
 
-        if(!isGameEnd && field.isCellClosed(x, y) && !isFirstMove){
+        if(!isGameEnd && !field.cellInfo(x, y).isOpen() && !isFirstMove){
             field.changeFlag(x, y);
-
-            haveChanges = true;
             notifyObservers();
         }
     }
 
 
-    public Field.CellInfo cellInfo(int x, int y){
+    public MineField.CellInfo cellInfo(int x, int y){
         return field.cellInfo(x, y);
     }
 

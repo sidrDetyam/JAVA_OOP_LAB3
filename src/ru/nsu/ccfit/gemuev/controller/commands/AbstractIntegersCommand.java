@@ -1,6 +1,7 @@
 package ru.nsu.ccfit.gemuev.controller.commands;
 
 import org.jetbrains.annotations.NotNull;
+import ru.nsu.ccfit.gemuev.controller.CheckedIllegalArgsException;
 
 import java.util.List;
 

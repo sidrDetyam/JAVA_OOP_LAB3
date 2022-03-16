@@ -1,19 +1,24 @@
 package ru.nsu.ccfit.gemuev.gui;
 
-import ru.nsu.ccfit.gemuev.Model;
+import ru.nsu.ccfit.gemuev.LoadPropertiesException;
+import ru.nsu.ccfit.gemuev.model.GameLevels;
+import ru.nsu.ccfit.gemuev.model.Model;
 import ru.nsu.ccfit.gemuev.controller.Controller;
 
 import javax.swing.*;
+import java.awt.*;
+import java.util.Optional;
 
 public class MainForm extends JFrame{
 
     public JPanel mainPanel;
     public JPanel secondPanel;
-    public ClockLabel clockLabel;
 
 
-    MainForm(Model model, Controller controller, GuiView guiView){
-        super();
+    MainForm(Model model, Controller controller, Image icon){
+
+        setTitle("Minesweeper");
+        setIconImage(icon);
 
         setContentPane(mainPanel);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -21,15 +26,26 @@ public class MainForm extends JFrame{
         JMenuBar menuBar = new JMenuBar();
         JMenu newGameMenu = new JMenu("New Game");
         JMenu highScoresMenu = new JMenu("High scores");
-        JMenu aboutMenu = new JMenu("About");
+        JMenuItem aboutMenu = new JMenuItem("About");
+
+        aboutMenu.addActionListener(e ->
+                JOptionPane.showMessageDialog(this, "Lab 3", "About",
+                JOptionPane.PLAIN_MESSAGE));
 
         JMenuItem easyItem = new JMenuItem("Easy");
         JMenuItem middleItem = new JMenuItem("Middle");
         JMenuItem hardItem = new JMenuItem("Hard");
 
-        easyItem.addActionListener(e -> controller.execute(model, "init 9 9 12"));
-        middleItem.addActionListener(e -> controller.execute(model, "init 18 18 40"));
-        hardItem.addActionListener(e -> controller.execute(model, "init 24 24 99"));
+        Optional<String> easySetting = GameLevels.getSetting("easy");
+        Optional<String> middleSetting = GameLevels.getSetting("middle");
+        Optional<String> hardSetting = GameLevels.getSetting("hard");
+        if(easySetting.isEmpty() || middleSetting.isEmpty() || hardSetting.isEmpty()){
+            throw new LoadPropertiesException("bruh");
+        }
+
+        easyItem.addActionListener(e -> controller.execute(model, easySetting.get()));
+        middleItem.addActionListener(e -> controller.execute(model, middleSetting.get()));
+        hardItem.addActionListener(e -> controller.execute(model, hardSetting.get()));
 
         newGameMenu.add(easyItem);
         newGameMenu.add(middleItem);
@@ -40,10 +56,7 @@ public class MainForm extends JFrame{
         menuBar.add(aboutMenu);
         setJMenuBar(menuBar);
 
-        clockLabel = new ClockLabel(guiView);
-        mainPanel.add(clockLabel);
-        model.clock.add(clockLabel);
+        ClockLabel clockLabel = new ClockLabel(model);
+        mainPanel.add(clockLabel, 0);
     }
-
 }
-
