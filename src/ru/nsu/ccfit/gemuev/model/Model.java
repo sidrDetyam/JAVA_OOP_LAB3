@@ -9,7 +9,7 @@ public class Model extends Observable {
     private MineField field;
     private boolean isGameEnd;
     private boolean isFirstMove;
-    private boolean isViewClosed;
+    private volatile boolean isViewClosed;
     private final ModelClock clock;
 
 
@@ -17,19 +17,8 @@ public class Model extends Observable {
         clock.add(label);
     }
 
-
-    public void increaseClock(){
-        if(!isFirstMove && !isGameEnd){
-            clock.increaseClock();
-        }
-    }
-
     public int getClock(){
         return clock.getClock();
-    }
-
-    public void nullClock(){
-        clock.setClock(0);
     }
 
     public boolean isFirstMove(){
@@ -40,6 +29,7 @@ public class Model extends Observable {
 
     public void closeView(){
         isViewClosed = true;
+        clock.resetClock();
         notifyObservers();
         removeAll();
     }
@@ -55,7 +45,7 @@ public class Model extends Observable {
         field = new MineField(fieldSizeX, fieldSizeY, countOfMines);
         isGameEnd = false;
         isFirstMove = true;
-        nullClock();
+        clock.resetClock();
         notifyObservers();
     }
 
@@ -79,7 +69,13 @@ public class Model extends Observable {
 
         if(!isGameEnd && !field.cellInfo(x, y).isOpen()) {
             isGameEnd = field.openCell(x, y, isFirstMove);
-            isFirstMove = false;
+            if(isGameEnd){
+                clock.resetClock();
+            }
+            if(isFirstMove){
+                clock.startClock();
+                isFirstMove = false;
+            }
             notifyObservers();
         }
     }

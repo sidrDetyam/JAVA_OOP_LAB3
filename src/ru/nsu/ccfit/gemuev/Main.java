@@ -9,9 +9,6 @@ import ru.nsu.ccfit.gemuev.model.GameLevels;
 import ru.nsu.ccfit.gemuev.model.Model;
 
 import java.util.Optional;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 
 public class Main {
@@ -27,15 +24,11 @@ public class Main {
         }
         controller.execute(model, defaultSetting.get());
 
-        final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-        executorService.scheduleAtFixedRate(model::increaseClock, 0, 1, TimeUnit.SECONDS);
-
         if(args.length==1 || !args[1].equals("console")){
             View v = new GuiView(model, controller);
         }
         else{
             View v = new ConsoleView(model, controller);
-            executorService.shutdown();
         }
 
     }

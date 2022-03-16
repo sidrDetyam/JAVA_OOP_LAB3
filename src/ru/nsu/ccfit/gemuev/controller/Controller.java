@@ -1,5 +1,6 @@
 package ru.nsu.ccfit.gemuev.controller;
 
+import org.jetbrains.annotations.NotNull;
 import ru.nsu.ccfit.gemuev.model.Model;
 import ru.nsu.ccfit.gemuev.controller.commands.Command;
 import ru.nsu.ccfit.gemuev.controller.commands.CommandFactory;
@@ -14,7 +15,7 @@ import java.util.regex.Pattern;
 public class Controller{
 
 
-    private ArrayList<String> parse(String command){
+    private @NotNull ArrayList<String> parse(@NotNull String command){
 
         ArrayList<String> tokens = new ArrayList<>();
 

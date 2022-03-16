@@ -24,10 +24,8 @@ public class GuiView implements View {
     private final MainForm mainWindow;
     private JButton[][] cells;
 
-
     private final int cellSize = 30;
     private final HashMap<String, ImageIcon> icons;
-
 
 
     public GuiView(@NotNull Model model, @NotNull Controller controller){
