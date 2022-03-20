@@ -62,8 +62,8 @@ public class GuiView implements View {
 
         var layout = new GridLayout(model.sizeY(), model.sizeX(), 0, 0);
 
-        mainWindow.secondPanel.removeAll();
-        mainWindow.secondPanel.setLayout(layout);
+        mainWindow.cellsPanel.removeAll();
+        mainWindow.cellsPanel.setLayout(layout);
         cells = new JButton[model.sizeX()][model.sizeY()];
 
         mainWindow.setSize(cellSize * model.sizeX(), cellSize*model.sizeY()+50);
@@ -92,7 +92,7 @@ public class GuiView implements View {
                     }
                 });
 
-                mainWindow.secondPanel.add(cells[i][j]);
+                mainWindow.cellsPanel.add(cells[i][j]);
             }
         }
     }
@@ -120,11 +120,13 @@ public class GuiView implements View {
             init_render();
         }
 
+        mainWindow.minesLeft.setText(" Mines left: " + model.minesLeft() + " ");
+
         for (int i = 0; i < model.sizeX(); ++i) {
             for (int j = 0; j < model.sizeY(); ++j) {
 
                 var info = model.cellInfo(i, j);
-                if(info.isOpen()){
+                if(info.isOpen() && !info.isMine()){
                     cells[i][j].setBorder(BorderFactory.createEtchedBorder());
                 }
 
@@ -133,9 +135,18 @@ public class GuiView implements View {
         }
 
         mainWindow.setVisible(true);
+
+        if(model.isGameEnd()){
+            JOptionPane.showMessageDialog(mainWindow,
+                    model.isGameWin()? "You won, well done!))" : "dude you lost",
+                    "Game over",
+                    model.isGameWin()? JOptionPane.PLAIN_MESSAGE : JOptionPane.ERROR_MESSAGE);
+        }
     }
 
 
     @Override
-    public void close(){}
+    public void close(){
+        System.exit(0);
+    }
 }

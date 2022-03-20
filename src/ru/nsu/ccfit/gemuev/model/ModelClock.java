@@ -16,10 +16,13 @@ public class ModelClock extends Observable {
         return isClockRun;
     }
 
-    public void resetClock(){
+    public void nullClock(){
         clock = 0;
-        isClockRun = false;
         notifyObservers();
+    }
+
+    public void resetClock(){
+        isClockRun = false;
     }
 
     public void startClock(){

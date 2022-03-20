@@ -12,8 +12,9 @@ import java.util.Optional;
 public class MainForm extends JFrame{
 
     public JPanel mainPanel;
-    public JPanel secondPanel;
-
+    public JPanel cellsPanel;
+    public JLabel minesLeft;
+    public JPanel timerPanel;
 
     MainForm(Model model, Controller controller, Image icon){
 
@@ -26,11 +27,17 @@ public class MainForm extends JFrame{
         JMenuBar menuBar = new JMenuBar();
         JMenu newGameMenu = new JMenu("New Game");
         JMenu highScoresMenu = new JMenu("High scores");
+        highScoresMenu.setEnabled(false);
         JMenuItem aboutMenu = new JMenuItem("About");
+        JMenuItem exitButton = new JMenuItem("Exit");
 
         aboutMenu.addActionListener(e ->
-                JOptionPane.showMessageDialog(this, "Lab 3", "About",
-                JOptionPane.PLAIN_MESSAGE));
+                JOptionPane.showMessageDialog(this,
+                        "Java OOP Lab 3 | Minesweeper | a.gemuev | 20209", "About",
+                JOptionPane.INFORMATION_MESSAGE));
+
+        exitButton.addActionListener(e -> controller.execute(model, "close"));
+
 
         JMenuItem easyItem = new JMenuItem("Easy");
         JMenuItem middleItem = new JMenuItem("Middle");
@@ -54,9 +61,11 @@ public class MainForm extends JFrame{
         menuBar.add(newGameMenu);
         menuBar.add(highScoresMenu);
         menuBar.add(aboutMenu);
+        menuBar.add(exitButton);
         setJMenuBar(menuBar);
 
         ClockLabel clockLabel = new ClockLabel(model);
-        mainPanel.add(clockLabel, 0);
+        timerPanel.add(clockLabel, 0);
     }
+
 }

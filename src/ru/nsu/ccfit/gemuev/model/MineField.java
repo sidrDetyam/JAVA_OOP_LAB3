@@ -21,6 +21,12 @@ public class MineField {
         );
     }
 
+    public int countOfFlags(){return countOfFlags;}
+
+    public int leftToOpen(){return leftToOpen;}
+
+    public int countOfMines(){return countOfMines;}
+
     public int sizeX() {return sizeX;}
 
     public int sizeY() {return sizeY;}
@@ -31,6 +37,8 @@ public class MineField {
         this.sizeX = sizeX;
         this.sizeY = sizeY;
         this.countOfMines = countOfMines;
+        leftToOpen = sizeX*sizeY - countOfMines;
+        countOfFlags = 0;
         cells = new Cell[sizeX][sizeY];
         for(int i=0; i<sizeX; ++i){
             for(int j=0;  j<sizeY; ++j){
@@ -64,13 +72,17 @@ public class MineField {
         if(cells[x][y].minesAround==0){
             dfs_open(x, y);
         }
+        else {
+            cells[x][y].isOpen = true;
+            --leftToOpen;
+        }
 
-        cells[x][y].isOpen = true;
-        return false;
+        return leftToOpen==0;
     }
 
 
     public void changeFlag(int x, int y){
+        countOfFlags += (cells[x][y].isFlag? -1 : 1);
         cells[x][y].isFlag = !cells[x][y].isFlag;
     }
 
@@ -84,6 +96,8 @@ public class MineField {
     private final Cell[][] cells;
     private final int sizeX, sizeY;
     private final int countOfMines;
+    private int leftToOpen;
+    private int countOfFlags;
 
     private boolean isInBounds(int x, int y){
         return 0<=x && x<sizeX && 0<=y && y<sizeY;
@@ -146,6 +160,7 @@ public class MineField {
         }
 
         cells[x][y].isOpen = true;
+        --leftToOpen;
         if(cells[x][y].minesAround == 0) {
             for(int i=-1; i<2; ++i){
                 for(int j=-1; j<2; ++j){

@@ -12,13 +12,13 @@ public class ClockLabel extends JLabel implements Observer {
 
     public ClockLabel(@NotNull Model model){
         this.model = model;
-        setText(" Time: 0");
+        setText(" Time: 0 ");
         model.addClockLabel(this);
     }
 
     @Override
     public void update() {
-        setText(" Time: " + model.getClock());
+        setText(" Time: " + model.getClock() + " ");
         setVisible(true);
     }
 }

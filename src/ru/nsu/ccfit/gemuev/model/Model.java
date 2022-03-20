@@ -8,6 +8,7 @@ public class Model extends Observable {
 
     private MineField field;
     private boolean isGameEnd;
+    private boolean isGameWin;
     private boolean isFirstMove;
     private volatile boolean isViewClosed;
     private final ModelClock clock;
@@ -17,9 +18,15 @@ public class Model extends Observable {
         clock.add(label);
     }
 
+    public int minesLeft(){return field.countOfMines() - field.countOfFlags();}
+
     public int getClock(){
         return clock.getClock();
     }
+
+    public boolean isGameEnd(){return isGameEnd;}
+
+    public boolean isGameWin(){return isGameWin;}
 
     public boolean isFirstMove(){
         return isFirstMove;
@@ -46,6 +53,7 @@ public class Model extends Observable {
         isGameEnd = false;
         isFirstMove = true;
         clock.resetClock();
+        clock.nullClock();
         notifyObservers();
     }
 
@@ -59,7 +67,6 @@ public class Model extends Observable {
         return field.sizeX();
     }
 
-
     public int sizeY(){
         return field.sizeY();
     }
@@ -69,12 +76,13 @@ public class Model extends Observable {
 
         if(!isGameEnd && !field.cellInfo(x, y).isOpen()) {
             isGameEnd = field.openCell(x, y, isFirstMove);
-            if(isGameEnd){
-                clock.resetClock();
-            }
             if(isFirstMove){
                 clock.startClock();
                 isFirstMove = false;
+            }
+            if(isGameEnd){
+                clock.resetClock();
+                isGameWin = field.leftToOpen()==0;
             }
             notifyObservers();
         }
@@ -83,7 +91,13 @@ public class Model extends Observable {
 
     public void changeFlag(int x, int y){
 
-        if(!isGameEnd && !field.cellInfo(x, y).isOpen() && !isFirstMove){
+        var info = field.cellInfo(x, y);
+
+        if(!isGameEnd && !info.isOpen() && !isFirstMove){
+            if(!info.isFlag() && minesLeft()==0){
+                return;
+            }
+
             field.changeFlag(x, y);
             notifyObservers();
         }
