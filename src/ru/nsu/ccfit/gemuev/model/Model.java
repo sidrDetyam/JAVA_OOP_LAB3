@@ -4,6 +4,7 @@ package ru.nsu.ccfit.gemuev.model;
 import ru.nsu.ccfit.gemuev.Observable;
 import ru.nsu.ccfit.gemuev.Observer;
 
+
 public class Model extends Observable {
 
     private MineField field;
@@ -12,7 +13,10 @@ public class Model extends Observable {
     private boolean isFirstMove;
     private volatile boolean isViewClosed;
     private final ModelClock clock;
+    private final HighScores highScores;
+    private final Server gameServer;
 
+    public Server gameServer(){return gameServer;}
 
     public void addClockLabel(Observer label){
         clock.add(label);
@@ -33,6 +37,8 @@ public class Model extends Observable {
     }
 
     public boolean isViewClosed() {return isViewClosed;}
+
+
 
     public void closeView(){
         isViewClosed = true;
@@ -58,8 +64,12 @@ public class Model extends Observable {
     }
 
 
-    public Model(){
+    public HighScores getHighScores(){return highScores;}
+
+    public Model(String serverUrl){
         clock = new ModelClock();
+        gameServer = new Server(serverUrl);
+        highScores = new HighScores(this,100);
     }
 
 
@@ -69,6 +79,14 @@ public class Model extends Observable {
 
     public int sizeY(){
         return field.sizeY();
+    }
+
+
+    public void winGame(){
+        isGameEnd = true;
+        isGameWin = true;
+        clock.resetClock();
+        notifyObservers();
     }
 
 

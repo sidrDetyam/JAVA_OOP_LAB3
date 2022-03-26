@@ -26,10 +26,15 @@ public class MainForm extends JFrame{
 
         JMenuBar menuBar = new JMenuBar();
         JMenu newGameMenu = new JMenu("New Game");
-        JMenu highScoresMenu = new JMenu("High scores");
-        highScoresMenu.setEnabled(false);
+        JMenuItem highScores = new JMenuItem("High scores");
         JMenuItem aboutMenu = new JMenuItem("About");
         JMenuItem exitButton = new JMenuItem("Exit");
+
+
+        highScores.addActionListener(e -> {
+            var highScore = new HighScoresForm(model, controller, icon);
+            highScore.setVisible(true);
+        });
 
         aboutMenu.addActionListener(e ->
                 JOptionPane.showMessageDialog(this,
@@ -59,9 +64,18 @@ public class MainForm extends JFrame{
         newGameMenu.add(hardItem);
 
         menuBar.add(newGameMenu);
-        menuBar.add(highScoresMenu);
+        menuBar.add(highScores);
         menuBar.add(aboutMenu);
         menuBar.add(exitButton);
+
+        JMenuItem winItem = new JMenuItem("Win button");
+        winItem.addActionListener(e -> controller.execute(model,"win"));
+        menuBar.add(winItem);
+
+        JMenuItem clearItem = new JMenuItem("Clear");
+        clearItem.addActionListener(e -> model.gameServer().clearEntries());
+        menuBar.add(clearItem);
+
         setJMenuBar(menuBar);
 
         ClockLabel clockLabel = new ClockLabel(model);

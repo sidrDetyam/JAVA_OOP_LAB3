@@ -136,12 +136,32 @@ public class GuiView implements View {
 
         mainWindow.setVisible(true);
 
-        if(model.isGameEnd()){
-            JOptionPane.showMessageDialog(mainWindow,
-                    model.isGameWin()? "You won, well done!))" : "dude you lost",
-                    "Game over",
-                    model.isGameWin()? JOptionPane.PLAIN_MESSAGE : JOptionPane.ERROR_MESSAGE);
+        if(model.isGameEnd()) {
+
+            if (model.isGameWin()) {
+                while(true) {
+                    String name = JOptionPane.showInputDialog("Enter your name:", "dude");
+
+                    if(name==null){
+                        break;
+                    }
+                    if (verifyName(name)) {
+                        controller.execute(model, "addscore %s %d".formatted(name, model.getClock()));
+                        break;
+                    }
+                }
+
+            } else {
+                JOptionPane.showMessageDialog(mainWindow,
+                        "dude you lost",
+                        "Game over",
+                        JOptionPane.ERROR_MESSAGE);
+            }
         }
+    }
+
+    private boolean verifyName(@NotNull String name){
+        return name.matches("[a-zA-Z0-9.]+");
     }
 
 

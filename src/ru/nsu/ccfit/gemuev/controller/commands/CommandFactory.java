@@ -1,5 +1,6 @@
 package ru.nsu.ccfit.gemuev.controller.commands;
 
+import org.jetbrains.annotations.NotNull;
 import ru.nsu.ccfit.gemuev.LoadPropertiesException;
 
 import java.io.IOException;
@@ -36,7 +37,7 @@ public class CommandFactory{
     private static final CommandFactory INSTANCE = new CommandFactory();
 
 
-    public static Optional<Command> getCommand(String commandName){
+    public static Optional<Command> getCommand(@NotNull String commandName){
 
         var constructor = INSTANCE.commandConstructors.get(commandName);
         if(constructor==null){
