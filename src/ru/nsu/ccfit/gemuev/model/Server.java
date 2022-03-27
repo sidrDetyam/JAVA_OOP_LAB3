@@ -56,10 +56,14 @@ public class Server {
     public Optional<HighScoreEntry[]> getTopPlayers(int count){
         String response = postJsonRequest("{ \"type\" : \"get\", \"count\" : \"%d\" }".formatted(count));
 
-        if(response.equals("error") || response.equals("")){
+        if(response.equals("error")){
             return Optional.empty();
         }
         else{
+            if(response.equals("")){
+                return Optional.of(new HighScoreEntry[0]);
+            }
+
             String[] raw = response.split("\\|");
             HighScoreEntry[] scores = new HighScoreEntry[raw.length];
             for(int i=0; i<raw.length; ++i){

@@ -12,7 +12,10 @@ public class SendNewScoreCommand implements Command{
         try{
             int score = Integer.parseInt(arguments.get(1));
             int level = Integer.parseInt(arguments.get(2));
-            Thread sendThread = new Thread(() -> model.gameServer().addEntry(arguments.get(0), score, level));
+            Thread sendThread = new Thread(() -> {
+                model.gameServer().addEntry(arguments.get(0), score, level);
+                model.getHighScores().update();
+            });
             sendThread.start();
         }
         catch(IndexOutOfBoundsException | NumberFormatException e){

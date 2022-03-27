@@ -68,16 +68,16 @@ public class MainForm extends JFrame{
         menuBar.add(aboutMenu);
         menuBar.add(exitButton);
 
+        //these two buttons only for debug
         JMenuItem winItem = new JMenuItem("Win button");
         winItem.addActionListener(e -> controller.execute(model,"win"));
         menuBar.add(winItem);
 
         JMenuItem clearItem = new JMenuItem("Clear");
-        clearItem.addActionListener(e -> model.gameServer().clearEntries());
+        clearItem.addActionListener(e -> controller.execute(model, "clear"));
         menuBar.add(clearItem);
 
         setJMenuBar(menuBar);
-
         ClockLabel clockLabel = new ClockLabel(model);
         timerPanel.add(clockLabel, 0);
     }
