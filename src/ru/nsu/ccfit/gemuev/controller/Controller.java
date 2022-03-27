@@ -50,7 +50,6 @@ public class Controller{
         } catch (CheckedIllegalArgsException e) {
             throw new IllegalArgumentException(e.getMessage(), e);
         }
-
     }
 
 }

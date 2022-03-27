@@ -1,8 +1,10 @@
 package ru.nsu.ccfit.gemuev.gui;
 
 import org.jetbrains.annotations.NotNull;
+import ru.nsu.ccfit.gemuev.LoadPropertiesException;
 import ru.nsu.ccfit.gemuev.Observer;
 import ru.nsu.ccfit.gemuev.controller.Controller;
+import ru.nsu.ccfit.gemuev.model.GameLevels;
 import ru.nsu.ccfit.gemuev.model.Model;
 
 import javax.swing.*;
@@ -26,7 +28,14 @@ public class HighScoresForm extends JFrame implements Observer {
         tableModel.setRowCount(0);
         if(statistics.isPresent()){
             for(var entry : statistics.get()){
-                String[] row = new String[]{entry.name(), entry.score().toString()};
+
+                var opt = GameLevels.getLevelNameByID(entry.levelID());
+                if(opt.isEmpty()){
+                    throw new LoadPropertiesException("Terminate!!!...!>>!>!>!");
+                }
+
+                String[] row = new String[]{entry.name(),
+                        Integer.toString(entry.score()), opt.get()};
                 tableModel.addRow(row);
             }
         }
@@ -41,7 +50,7 @@ public class HighScoresForm extends JFrame implements Observer {
         setIconImage(icon);
 
         String[][] array = new String[][]{};
-        String[] columnsHeader = new String[]{"Player", "Score"};
+        String[] columnsHeader = new String[]{"Player", "Score", "Level"};
 
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         var thisFrame = this;
@@ -58,9 +67,9 @@ public class HighScoresForm extends JFrame implements Observer {
         table.setEnabled(false);
         table.setFont(new Font("Arial", Font.BOLD, 14));
 
+        tableUpdate();
         Thread sendThread = new Thread(() -> model.getHighScores().update());
         sendThread.start();
-        tableUpdate();
 
         Box contents = new Box(BoxLayout.Y_AXIS);
         contents.add(new JScrollPane(table));

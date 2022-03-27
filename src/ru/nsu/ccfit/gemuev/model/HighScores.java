@@ -16,12 +16,15 @@ public class HighScores extends Observable {
         this.model = model;
     }
 
-    public void update(){
-        statistics = model.gameServer().getTopPlayers(countOfEntries).orElse(null);
-        notifyObservers();
+    public synchronized void update(){
+        var tmp = model.gameServer().getTopPlayers(countOfEntries).orElse(null);
+        if(tmp!=null) {
+            statistics = tmp;
+            notifyObservers();
+        }
     }
 
-    public Optional<HighScoreEntry[]> statistics(){
+    public synchronized Optional<HighScoreEntry[]> statistics(){
         return statistics==null? Optional.empty() : Optional.of(statistics);
     }
 

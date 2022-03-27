@@ -15,6 +15,9 @@ public class Model extends Observable {
     private final ModelClock clock;
     private final HighScores highScores;
     private final Server gameServer;
+    private int levelID;
+
+    public int getLevelID(){return levelID;}
 
     public Server gameServer(){return gameServer;}
 
@@ -54,8 +57,9 @@ public class Model extends Observable {
     }
 
 
-    public void init(int fieldSizeX, int fieldSizeY, int countOfMines){
+    public void init(int fieldSizeX, int fieldSizeY, int countOfMines, int levelID){
         field = new MineField(fieldSizeX, fieldSizeY, countOfMines);
+        this.levelID = levelID;
         isGameEnd = false;
         isFirstMove = true;
         clock.resetClock();

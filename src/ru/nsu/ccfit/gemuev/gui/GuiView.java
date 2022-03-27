@@ -146,7 +146,8 @@ public class GuiView implements View {
                         break;
                     }
                     if (verifyName(name)) {
-                        controller.execute(model, "addscore %s %d".formatted(name, model.getClock()));
+                        controller.execute(model, "addscore %s %d %d".
+                                formatted(name, model.getClock(), model.getLevelID()));
                         break;
                     }
                 }

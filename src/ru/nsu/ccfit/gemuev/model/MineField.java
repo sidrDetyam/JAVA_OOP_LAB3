@@ -1,7 +1,5 @@
 package ru.nsu.ccfit.gemuev.model;
 
-import ru.nsu.ccfit.gemuev.TripleConsumer;
-
 import java.util.Random;
 
 

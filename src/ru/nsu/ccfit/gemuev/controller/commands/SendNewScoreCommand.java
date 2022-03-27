@@ -5,13 +5,14 @@ import ru.nsu.ccfit.gemuev.controller.CheckedIllegalArgsException;
 import ru.nsu.ccfit.gemuev.model.Model;
 import java.util.List;
 
-public class SendNewScore implements Command{
+public class SendNewScoreCommand implements Command{
     @Override
     public void execute(@NotNull Model model, @NotNull List<String> arguments) throws CheckedIllegalArgsException {
 
         try{
             int score = Integer.parseInt(arguments.get(1));
-            Thread sendThread = new Thread(() -> model.gameServer().addEntry(arguments.get(0), score));
+            int level = Integer.parseInt(arguments.get(2));
+            Thread sendThread = new Thread(() -> model.gameServer().addEntry(arguments.get(0), score, level));
             sendThread.start();
         }
         catch(IndexOutOfBoundsException | NumberFormatException e){

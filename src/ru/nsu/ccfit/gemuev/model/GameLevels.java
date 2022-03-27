@@ -43,4 +43,18 @@ public class GameLevels {
         }
     }
 
+    public static @NotNull Optional<String> getLevelNameByID(int levelID){
+
+        String level = Integer.toString(levelID);
+
+        for(var i : INSTANCE.settings.entrySet()){
+            String[] tmp = i.getValue().split(" ");
+            if(tmp[4].equals(level)){
+                return Optional.of(i.getKey());
+            }
+        }
+
+        return Optional.empty();
+    }
+
 }

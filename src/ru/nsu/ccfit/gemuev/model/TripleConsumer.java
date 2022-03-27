@@ -1,4 +1,4 @@
-package ru.nsu.ccfit.gemuev;
+package ru.nsu.ccfit.gemuev.model;
 
 import java.util.Objects;
 

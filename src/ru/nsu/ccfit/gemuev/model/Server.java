@@ -1,6 +1,7 @@
 package ru.nsu.ccfit.gemuev.model;
 
 import org.apache.commons.io.IOUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
@@ -43,9 +44,9 @@ public class Server {
         }
     }
 
-    public void addEntry(String name, int score){
-        postJsonRequest("{ \"type\" : \"add\", \"name\" : \"%s\", \"score\" : \"%d\" }"
-                .formatted(name, score));
+    public void addEntry(@NotNull String name, int score, int level){
+        postJsonRequest("{ \"type\" : \"add\", \"name\" : \"%s\", \"score\" : \"%d\", \"levelID\":\"%d\" }"
+                .formatted(name, score, level));
     }
 
     public void clearEntries(){
@@ -63,7 +64,7 @@ public class Server {
             HighScoreEntry[] scores = new HighScoreEntry[raw.length];
             for(int i=0; i<raw.length; ++i){
                 String[] tmp = raw[i].split(":");
-                scores[i] = new HighScoreEntry(tmp[0], Integer.parseInt(tmp[1]));
+                scores[i] = new HighScoreEntry(tmp[0], Integer.parseInt(tmp[1]), Integer.parseInt(tmp[2]));
             }
 
             return Optional.of(scores);
