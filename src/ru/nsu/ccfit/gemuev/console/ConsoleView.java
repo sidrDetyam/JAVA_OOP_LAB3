@@ -1,11 +1,10 @@
 package ru.nsu.ccfit.gemuev.console;
 
 import org.jetbrains.annotations.NotNull;
+import ru.nsu.ccfit.gemuev.controller.Controller;
 import ru.nsu.ccfit.gemuev.model.MineField;
 import ru.nsu.ccfit.gemuev.model.Model;
 import ru.nsu.ccfit.gemuev.View;
-import ru.nsu.ccfit.gemuev.controller.Controller;
-
 import java.util.Scanner;
 
 

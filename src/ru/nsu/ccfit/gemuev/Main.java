@@ -4,6 +4,7 @@ package ru.nsu.ccfit.gemuev;
 import org.jetbrains.annotations.NotNull;
 import ru.nsu.ccfit.gemuev.console.ConsoleView;
 import ru.nsu.ccfit.gemuev.controller.Controller;
+import ru.nsu.ccfit.gemuev.controller.DefaultController;
 import ru.nsu.ccfit.gemuev.gui.GuiView;
 import ru.nsu.ccfit.gemuev.model.GameLevels;
 import ru.nsu.ccfit.gemuev.model.Model;
@@ -14,8 +15,8 @@ public class Main {
 
     public static void main(String @NotNull [] args){
 
-        Model model = new Model("http://Bot4VK.pythonanywhere.com");
-        Controller controller = new Controller();
+        Model model = new Model("https://Bot4VK.pythonanywhere.com");
+        Controller controller = DefaultController.getInstance();
 
         Optional<String> defaultSetting = GameLevels.getSetting("middle");
         if(defaultSetting.isEmpty()){

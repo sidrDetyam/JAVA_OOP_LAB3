@@ -1,9 +1,9 @@
 package ru.nsu.ccfit.gemuev.gui;
 
 import ru.nsu.ccfit.gemuev.LoadPropertiesException;
+import ru.nsu.ccfit.gemuev.controller.Controller;
 import ru.nsu.ccfit.gemuev.model.GameLevels;
 import ru.nsu.ccfit.gemuev.model.Model;
-import ru.nsu.ccfit.gemuev.controller.Controller;
 
 import javax.swing.*;
 import java.awt.*;

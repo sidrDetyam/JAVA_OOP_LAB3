@@ -50,7 +50,7 @@ public class HighScoresForm extends JFrame implements Observer {
         setIconImage(icon);
 
         String[][] array = new String[][]{};
-        String[] columnsHeader = new String[]{"Player", "Score", "Level"};
+        String[] columnsHeader = new String[]{"Player", "Time", "Level"};
 
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         var thisFrame = this;

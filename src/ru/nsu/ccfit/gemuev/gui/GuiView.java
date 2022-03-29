@@ -1,10 +1,10 @@
 package ru.nsu.ccfit.gemuev.gui;
 
 import org.jetbrains.annotations.NotNull;
+import ru.nsu.ccfit.gemuev.controller.Controller;
 import ru.nsu.ccfit.gemuev.model.MineField;
 import ru.nsu.ccfit.gemuev.model.Model;
 import ru.nsu.ccfit.gemuev.View;
-import ru.nsu.ccfit.gemuev.controller.Controller;
 import ru.nsu.ccfit.gemuev.LoadPropertiesException;
 
 import javax.swing.*;
@@ -23,10 +23,9 @@ public class GuiView implements View {
     private final Controller controller;
     private final MainForm mainWindow;
     private JButton[][] cells;
-
     private final int cellSize = 30;
     private final HashMap<String, ImageIcon> icons;
-
+    private String lastUserName;
 
     public GuiView(@NotNull Model model, @NotNull Controller controller){
         this.model = model;
@@ -140,12 +139,14 @@ public class GuiView implements View {
 
             if (model.isGameWin()) {
                 while(true) {
-                    String name = JOptionPane.showInputDialog("Enter your name:", "dude");
+                    String name = JOptionPane.showInputDialog("Enter your name:",
+                             lastUserName==null? "dude" : lastUserName);
 
                     if(name==null){
                         break;
                     }
                     if (verifyName(name)) {
+                        lastUserName = name;
                         controller.execute(model, "addscore %s %d %d".
                                 formatted(name, model.getClock(), model.getLevelID()));
                         break;
@@ -162,7 +163,7 @@ public class GuiView implements View {
     }
 
     private boolean verifyName(@NotNull String name){
-        return name.matches("[a-zA-Z0-9.]+");
+        return !name.contains(" ");
     }
 
 

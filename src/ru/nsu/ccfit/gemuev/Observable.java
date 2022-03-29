@@ -10,8 +10,8 @@ public class Observable {
         observers.add(observer);
     }
 
-    public boolean remove(Observer observer){
-        return observers.remove(observer);
+    public void remove(Observer observer){
+        observers.remove(observer);
     }
 
     public void removeAll(){observers.clear();}
