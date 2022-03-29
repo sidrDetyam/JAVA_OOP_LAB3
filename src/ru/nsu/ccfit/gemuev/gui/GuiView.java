@@ -3,7 +3,7 @@ package ru.nsu.ccfit.gemuev.gui;
 import org.jetbrains.annotations.NotNull;
 import ru.nsu.ccfit.gemuev.controller.Controller;
 import ru.nsu.ccfit.gemuev.model.MineField;
-import ru.nsu.ccfit.gemuev.model.Model;
+import ru.nsu.ccfit.gemuev.model.GameModel;
 import ru.nsu.ccfit.gemuev.View;
 import ru.nsu.ccfit.gemuev.LoadPropertiesException;
 
@@ -19,7 +19,7 @@ import java.util.Properties;
 
 public class GuiView implements View {
 
-    private final Model model;
+    private final GameModel model;
     private final Controller controller;
     private final MainForm mainWindow;
     private JButton[][] cells;
@@ -27,10 +27,11 @@ public class GuiView implements View {
     private final HashMap<String, ImageIcon> icons;
     private String lastUserName;
 
-    public GuiView(@NotNull Model model, @NotNull Controller controller){
+
+    public GuiView(@NotNull GameModel model, @NotNull Controller controller){
         this.model = model;
         this.controller = controller;
-        model.add(this);
+        model.setView(this);
         icons = new HashMap<>();
 
         try(InputStream inputStream = GuiView.class
@@ -53,7 +54,7 @@ public class GuiView implements View {
         }
 
         mainWindow = new MainForm(model, controller, icons.get("mine").getImage());
-        update();
+        render();
     }
 
 
@@ -64,10 +65,8 @@ public class GuiView implements View {
         mainWindow.cellsPanel.removeAll();
         mainWindow.cellsPanel.setLayout(layout);
         cells = new JButton[model.sizeX()][model.sizeY()];
-
         mainWindow.setSize(cellSize * model.sizeX(), cellSize*model.sizeY()+50);
         mainWindow.setResizable(false);
-
 
         for (int i = 0; i < model.sizeX(); ++i) {
             for (int j = 0; j < model.sizeY(); ++j) {
@@ -107,25 +106,39 @@ public class GuiView implements View {
     }
 
 
+    private boolean verifyName(@NotNull String name){
+        return !name.contains(" ");
+    }
+
+
     @Override
-    public void update() {
+    public void showHighScores() {
+        var highScore = new HighScoresForm(model, icons.get("mine").getImage());
+        highScore.setVisible(true);
+    }
 
-        if(model.isViewClosed()){
-            close();
-            return;
-        }
 
-        if(model.isFirstMove()) {
+    @Override
+    public void showAboutInfo() {
+        JOptionPane.showMessageDialog(mainWindow,
+                model.aboutGameInfo(), "About",
+                JOptionPane.INFORMATION_MESSAGE);
+    }
+
+
+    @Override
+    public void render() {
+
+        if (model.isFirstMove()) {
             init_render();
         }
-
         mainWindow.minesLeft.setText(" Mines left: " + model.minesLeft() + " ");
 
         for (int i = 0; i < model.sizeX(); ++i) {
             for (int j = 0; j < model.sizeY(); ++j) {
 
                 var info = model.cellInfo(i, j);
-                if(info.isOpen() && !info.isMine()){
+                if (info.isOpen() && !info.isMine()) {
                     cells[i][j].setBorder(BorderFactory.createEtchedBorder());
                 }
 
@@ -134,36 +147,34 @@ public class GuiView implements View {
         }
 
         mainWindow.setVisible(true);
-
-        if(model.isGameEnd()) {
-
-            if (model.isGameWin()) {
-                while(true) {
-                    String name = JOptionPane.showInputDialog("Enter your name:",
-                             lastUserName==null? "dude" : lastUserName);
-
-                    if(name==null){
-                        break;
-                    }
-                    if (verifyName(name)) {
-                        lastUserName = name;
-                        controller.execute(model, "addscore %s %d %d".
-                                formatted(name, model.getClock(), model.getLevelID()));
-                        break;
-                    }
-                }
-
-            } else {
-                JOptionPane.showMessageDialog(mainWindow,
-                        "dude you lost",
-                        "Game over",
-                        JOptionPane.ERROR_MESSAGE);
-            }
+        if (model.isGameEnd()) {
+            gameOver();
         }
     }
 
-    private boolean verifyName(@NotNull String name){
-        return !name.contains(" ");
+
+    private void gameOver () {
+        if (model.isGameWin()) {
+            while (true) {
+                String name = JOptionPane.showInputDialog("Enter your name:",
+                        lastUserName == null ? "dude" : lastUserName);
+
+                if (name == null) {
+                    break;
+                }
+                if (verifyName(name)) {
+                    lastUserName = name;
+                    controller.execute(model, "addscore %s %d %d".
+                            formatted(name, model.getClock(), model.getLevelID()));
+                    break;
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(mainWindow,
+                    "dude you lost",
+                    "Game over",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 
 

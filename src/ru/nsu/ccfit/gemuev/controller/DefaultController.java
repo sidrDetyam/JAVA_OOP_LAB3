@@ -1,7 +1,7 @@
 package ru.nsu.ccfit.gemuev.controller;
 
 import org.jetbrains.annotations.NotNull;
-import ru.nsu.ccfit.gemuev.model.Model;
+import ru.nsu.ccfit.gemuev.model.GameModel;
 import ru.nsu.ccfit.gemuev.controller.commands.Command;
 import ru.nsu.ccfit.gemuev.controller.commands.CommandFactory;
 
@@ -23,7 +23,7 @@ public class DefaultController implements Controller {
     }
 
 
-    public void execute(@NotNull Model model, @NotNull String commandStr) {
+    public void execute(@NotNull GameModel model, @NotNull String commandStr) {
 
         var tokens = parse(commandStr);
         if(tokens.isEmpty()){

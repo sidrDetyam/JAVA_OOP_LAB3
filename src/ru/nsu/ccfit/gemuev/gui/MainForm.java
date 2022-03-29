@@ -3,10 +3,12 @@ package ru.nsu.ccfit.gemuev.gui;
 import ru.nsu.ccfit.gemuev.LoadPropertiesException;
 import ru.nsu.ccfit.gemuev.controller.Controller;
 import ru.nsu.ccfit.gemuev.model.GameLevels;
-import ru.nsu.ccfit.gemuev.model.Model;
+import ru.nsu.ccfit.gemuev.model.GameModel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Optional;
 
 public class MainForm extends JFrame{
@@ -16,34 +18,29 @@ public class MainForm extends JFrame{
     public JLabel minesLeft;
     public JPanel timerPanel;
 
-    MainForm(Model model, Controller controller, Image icon){
+    MainForm(GameModel model, Controller controller, Image icon){
 
         setTitle("Minesweeper");
         setIconImage(icon);
-
         setContentPane(mainPanel);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        JMenuBar menuBar = new JMenuBar();
-        JMenu newGameMenu = new JMenu("New Game");
-        JMenuItem highScores = new JMenuItem("High scores");
-        JMenuItem aboutMenu = new JMenuItem("About");
-        JMenuItem exitButton = new JMenuItem("Exit");
-
-
-        highScores.addActionListener(e -> {
-            var highScore = new HighScoresForm(model, controller, icon);
-            highScore.setVisible(true);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        var thisFrame = this;
+        addWindowListener(new WindowAdapter() {
+            @Override public void windowClosing(WindowEvent e) {
+                controller.execute(model, "close");
+            }
         });
 
-        aboutMenu.addActionListener(e ->
-                JOptionPane.showMessageDialog(this,
-                        "Java OOP Lab 3 | Minesweeper | a.gemuev | 20209", "About",
-                JOptionPane.INFORMATION_MESSAGE));
+        JMenuItem highScores = new JMenuItem("High scores");
+        highScores.addActionListener(e -> controller.execute(model, "show_highscores"));
 
+        JMenuItem aboutMenu = new JMenuItem("About");
+        aboutMenu.addActionListener(e -> controller.execute(model, "show_about_info"));
+
+        JMenuItem exitButton = new JMenuItem("Exit");
         exitButton.addActionListener(e -> controller.execute(model, "close"));
 
-
+        JMenu newGameMenu = new JMenu("New Game");
         JMenuItem easyItem = new JMenuItem("Easy");
         JMenuItem middleItem = new JMenuItem("Middle");
         JMenuItem hardItem = new JMenuItem("Hard");
@@ -63,6 +60,7 @@ public class MainForm extends JFrame{
         newGameMenu.add(middleItem);
         newGameMenu.add(hardItem);
 
+        JMenuBar menuBar = new JMenuBar();
         menuBar.add(newGameMenu);
         menuBar.add(highScores);
         menuBar.add(aboutMenu);
@@ -81,5 +79,4 @@ public class MainForm extends JFrame{
         ClockLabel clockLabel = new ClockLabel(model);
         timerPanel.add(clockLabel, 0);
     }
-
 }

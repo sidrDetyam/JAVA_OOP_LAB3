@@ -6,14 +6,15 @@ import ru.nsu.ccfit.gemuev.model.GameModel;
 
 import java.util.List;
 
-public class ExitCommand implements Command{
+public class ShowAboutInfoCommand implements Command{
+
     @Override
     public void execute(@NotNull GameModel model, @NotNull List<String> arguments) throws CheckedIllegalArgsException {
 
         if(!arguments.isEmpty()){
-            throw new CheckedIllegalArgsException("Wrong args count");
+            throw new CheckedIllegalArgsException("This command expects 0 arguments");
         }
 
-        model.closeView();
+        model.viewShowAboutInfo();
     }
 }

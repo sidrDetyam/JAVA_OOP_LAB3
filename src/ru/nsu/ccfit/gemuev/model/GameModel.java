@@ -1,29 +1,31 @@
 package ru.nsu.ccfit.gemuev.model;
 
 
-import ru.nsu.ccfit.gemuev.Observable;
 import ru.nsu.ccfit.gemuev.Observer;
+import ru.nsu.ccfit.gemuev.View;
 
 
-public class Model extends Observable {
+public class GameModel{
 
     private MineField field;
     private boolean isGameEnd;
     private boolean isGameWin;
     private boolean isFirstMove;
-    private volatile boolean isViewClosed;
     private final ModelClock clock;
     private final HighScores highScores;
-    private final Server gameServer;
+    private final Client gameServer;
     private int levelID;
+    private View view;
 
     public int getLevelID(){return levelID;}
 
-    public Server gameServer(){return gameServer;}
+    public Client getClient(){return gameServer;}
 
     public void addClockLabel(Observer label){
         clock.add(label);
     }
+
+    public void removeClockLabel(Observer label){clock.remove(label);}
 
     public int minesLeft(){return field.countOfMines() - field.countOfFlags();}
 
@@ -39,21 +41,14 @@ public class Model extends Observable {
         return isFirstMove;
     }
 
-    public boolean isViewClosed() {return isViewClosed;}
-
-
 
     public void closeView(){
-        isViewClosed = true;
         clock.resetClock();
-        notifyObservers();
-        removeAll();
+        view.close();
     }
 
-    @Override
-    public void add(Observer observer){
-        super.add(observer);
-        isViewClosed = false;
+    public void setView(View view){
+        this.view = view;
     }
 
 
@@ -64,15 +59,17 @@ public class Model extends Observable {
         isFirstMove = true;
         clock.resetClock();
         clock.nullClock();
-        notifyObservers();
+        if(view!=null){
+            view.render();
+        }
     }
 
 
     public HighScores getHighScores(){return highScores;}
 
-    public Model(String serverUrl){
+    public GameModel(String serverUrl){
         clock = new ModelClock();
-        gameServer = new Server(serverUrl);
+        gameServer = new Client(serverUrl);
         highScores = new HighScores(this,100);
     }
 
@@ -90,7 +87,7 @@ public class Model extends Observable {
         isGameEnd = true;
         isGameWin = true;
         clock.resetClock();
-        notifyObservers();
+        view.render();
     }
 
 
@@ -106,7 +103,7 @@ public class Model extends Observable {
                 clock.resetClock();
                 isGameWin = field.leftToOpen()==0;
             }
-            notifyObservers();
+            view.render();
         }
     }
 
@@ -121,7 +118,7 @@ public class Model extends Observable {
             }
 
             field.changeFlag(x, y);
-            notifyObservers();
+            view.render();
         }
     }
 
@@ -130,4 +127,11 @@ public class Model extends Observable {
         return field.cellInfo(x, y);
     }
 
+    public void viewShowHighScores(){view.showHighScores();}
+
+    public void viewShowAboutInfo(){view.showAboutInfo();}
+
+    public String aboutGameInfo(){
+        return "Java OOP Lab 3 | Minesweeper | a.gemuev | 20209";
+    }
 }

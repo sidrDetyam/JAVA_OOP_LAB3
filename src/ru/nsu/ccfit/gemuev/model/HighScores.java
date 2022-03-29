@@ -8,16 +8,16 @@ public class HighScores extends Observable {
 
     private HighScoreEntry[] statistics;
     private final int countOfEntries;
-    private final Model model;
+    private final GameModel model;
 
-    public HighScores(Model model, int countOfEntries){
+    public HighScores(GameModel model, int countOfEntries){
         statistics = null;
         this.countOfEntries = countOfEntries;
         this.model = model;
     }
 
     public synchronized void update(){
-        var tmp = model.gameServer().getTopPlayers(countOfEntries).orElse(null);
+        var tmp = model.getClient().getTopPlayers(countOfEntries).orElse(null);
         if(tmp!=null) {
             statistics = tmp;
             notifyObservers();

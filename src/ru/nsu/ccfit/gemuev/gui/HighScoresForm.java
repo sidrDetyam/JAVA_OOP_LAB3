@@ -3,9 +3,8 @@ package ru.nsu.ccfit.gemuev.gui;
 import org.jetbrains.annotations.NotNull;
 import ru.nsu.ccfit.gemuev.LoadPropertiesException;
 import ru.nsu.ccfit.gemuev.Observer;
-import ru.nsu.ccfit.gemuev.controller.Controller;
 import ru.nsu.ccfit.gemuev.model.GameLevels;
-import ru.nsu.ccfit.gemuev.model.Model;
+import ru.nsu.ccfit.gemuev.model.GameModel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -17,7 +16,7 @@ import java.awt.event.WindowEvent;
 public class HighScoresForm extends JFrame implements Observer {
 
     private JPanel mainPanel;
-    private final Model model;
+    private final GameModel model;
     private final JTable table;
 
     private void tableUpdate(){
@@ -42,7 +41,7 @@ public class HighScoresForm extends JFrame implements Observer {
     }
 
 
-    public HighScoresForm(@NotNull Model model, Controller controller, Image icon){
+    public HighScoresForm(@NotNull GameModel model, Image icon){
 
         this.model = model;
         setTitle("High scores (Updating...)");

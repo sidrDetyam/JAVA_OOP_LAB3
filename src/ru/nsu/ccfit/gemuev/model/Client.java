@@ -11,15 +11,9 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
-public class Server {
+public record Client(String serverUrl) {
 
-    private final String serverUrl;
-
-    public Server(String serverUrl){
-        this.serverUrl = serverUrl;
-    }
-
-    private synchronized String postJsonRequest(String jsonRequest){
+    private synchronized String postJsonRequest(String jsonRequest) {
 
         try {
             URL url = new URL(serverUrl);
@@ -44,29 +38,28 @@ public class Server {
         }
     }
 
-    public void addEntry(@NotNull String name, int score, int level){
+    public void addEntry(@NotNull String name, int score, int level) {
         postJsonRequest("{ \"type\" : \"add\", \"name\" : \"%s\", \"score\" : \"%d\", \"levelID\":\"%d\" }"
                 .formatted(name, score, level));
     }
 
-    public void clearEntries(){
+    public void clearEntries() {
         postJsonRequest("{\"type\" : \"clear\"}");
     }
 
-    public Optional<HighScoreEntry[]> getTopPlayers(int count){
+    public Optional<HighScoreEntry[]> getTopPlayers(int count) {
         String response = postJsonRequest("{ \"type\" : \"get\", \"count\" : \"%d\" }".formatted(count));
 
-        if(response.equals("error")){
+        if (response.equals("error")) {
             return Optional.empty();
-        }
-        else{
-            if(response.equals("")){
+        } else {
+            if (response.equals("")) {
                 return Optional.of(new HighScoreEntry[0]);
             }
 
             String[] raw = response.split("\\|");
             HighScoreEntry[] scores = new HighScoreEntry[raw.length];
-            for(int i=0; i<raw.length; ++i){
+            for (int i = 0; i < raw.length; ++i) {
                 String[] tmp = raw[i].split(":");
                 scores[i] = new HighScoreEntry(tmp[0], Integer.parseInt(tmp[1]), Integer.parseInt(tmp[2]));
             }

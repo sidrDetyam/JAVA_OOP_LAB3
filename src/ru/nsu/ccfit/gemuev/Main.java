@@ -7,7 +7,7 @@ import ru.nsu.ccfit.gemuev.controller.Controller;
 import ru.nsu.ccfit.gemuev.controller.DefaultController;
 import ru.nsu.ccfit.gemuev.gui.GuiView;
 import ru.nsu.ccfit.gemuev.model.GameLevels;
-import ru.nsu.ccfit.gemuev.model.Model;
+import ru.nsu.ccfit.gemuev.model.GameModel;
 import java.util.Optional;
 
 
@@ -15,7 +15,7 @@ public class Main {
 
     public static void main(String @NotNull [] args){
 
-        Model model = new Model("https://Bot4VK.pythonanywhere.com");
+        GameModel model = new GameModel("https://Bot4VK.pythonanywhere.com");
         Controller controller = DefaultController.getInstance();
 
         Optional<String> defaultSetting = GameLevels.getSetting("middle");
