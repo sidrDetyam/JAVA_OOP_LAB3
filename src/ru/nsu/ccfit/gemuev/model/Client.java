@@ -1,6 +1,5 @@
 package ru.nsu.ccfit.gemuev.model;
 
-import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedInputStream;
@@ -10,10 +9,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
+import java.util.Scanner;
 
 public record Client(String serverUrl) {
 
-    private synchronized String postJsonRequest(String jsonRequest) {
+    private synchronized @NotNull String postJsonRequest(String jsonRequest) {
 
         try {
             URL url = new URL(serverUrl);
@@ -28,10 +28,16 @@ public record Client(String serverUrl) {
             os.close();
 
             InputStream in = new BufferedInputStream(conn.getInputStream());
-            String response = IOUtils.toString(in, StandardCharsets.UTF_8);
+            //String response = IOUtils.toString(in, StandardCharsets.UTF_8);
+            StringBuilder response = new StringBuilder();
+            Scanner scanner = new Scanner(in);
+            while(scanner.hasNext()){
+                response.append(scanner.next());
+            }
+
             in.close();
             conn.disconnect();
-            return response;
+            return response.toString();
         } catch (Exception e) {
             e.printStackTrace();
             return "error";
